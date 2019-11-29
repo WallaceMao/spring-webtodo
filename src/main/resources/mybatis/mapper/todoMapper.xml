@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wallace.projectservice.mapper.TodoMapper" >
+    <resultMap id="todoMap" type="com.wallace.projectservice.model.Todo" >
+        <id column="id" property="id" />
+        <result column="date_created" property="dateCreated" />
+        <result column="last_updated" property="lastUpdated" />
+        <result column="title" property="title" />
+        <result column="note" property="note" />
+    </resultMap>
+
+    <sql id="baseSQL" >
+        id, date_created, last_updated, title, note
+    </sql>
+
+    <select id="getAll" resultMap="todoMap">
+        SELECT
+        <include refid="baseSQL" />
+        FROM todo
+    </select>
+
+    <select id="getOne" parameterType="java.lang.Long" resultMap="todoMap">
+        SELECT
+        <include refid="baseSQL" />
+        FROM todo
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO todo (date_created, last_updated, title, note) VALUES (NOW(), NOW(), #{title}, #{note})
+    </insert>
+
+    <update id="update" keyProperty="id">
+        UPDATE todo SET last_updated = NOW(), title = #{title}, note = #{note} WHERE id = #{id}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM todo WHERE id = #{id}
+    </delete>
+</mapper>
